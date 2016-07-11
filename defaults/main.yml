@@ -1,0 +1,15 @@
+---
+epel_pkg: epel-release
+epel_ver: latest
+epel_rel: "{{ ansible_distribution_major_version }}"
+epel_arch: noarch
+epel_baseurl: "https://dl.fedoraproject.org/pub/epel"
+epel_release: "{{ epel_pkg }}-{{ epel_ver }}-{{ epel_rel }}" 
+epel_fetch: "{{ epel_baseurl }}/{{ epel_release }}.{{ epel_arch }}.rpm"
+epel_repos:
+  epel: False
+  epel_debuginfo: False
+  epel_source: False
+  epel_testing: False
+  epel_testing_debuginfo: False
+  epel_testing_source: False
