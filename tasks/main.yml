@@ -1,6 +1,6 @@
 ---
 - name: Assert that prerequisites exist
-  tags: epel_release
+  tags: epel
   assert:
     that:
       - epel_pkg is defined
@@ -9,12 +9,12 @@
       - epel_baseurl is defined
 
 - name: Generate temporary destination via mktemp
-  tags: epel_release
+  tags: epel
   command: mktemp -u --suffix .rpm
   register: epel_mktemp
 
 - name: Download package to temporary destination
-  tags: epel_release
+  tags: epel
   get_url:
     url: "{{ epel_fetch }}"
     dest: "{{ epel_mktemp.stdout }}"
@@ -22,7 +22,7 @@
   when: epel_mktemp|success
 
 - name: Ensure epel-release package is installed
-  tags: epel_release
+  tags: epel
   yum:
     name: "{{ item }}"
     state: present
@@ -31,7 +31,7 @@
   when: epel_get_url|success
 
 - name: Configure epel.repo and epel-testing.repo
-  tags: epel_release
+  tags: epel
   template:
     src: "{{ item.src }}"
     dest: "{{ item.dst }}"
@@ -44,7 +44,7 @@
   when: epel_yum|success
 
 - name: Erase temporary package
-  tags: epel_release
+  tags: epel
   file:
     path: "{{ epel_mktemp.stdout }}"
     state: absent
