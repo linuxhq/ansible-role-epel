@@ -3,15 +3,7 @@ name=Extra Packages for Enterprise Linux {{ epel_rel }} - Testing - $basearch
 #baseurl=http://download.fedoraproject.org/pub/epel/testing/{{ epel_rel }}/$basearch
 mirrorlist=https://mirrors.fedoraproject.org/metalink?repo=testing-epel{{ epel_rel }}&arch=$basearch
 failovermethod=priority
-{% if epel_repos.epel_testing is defined %}
-{%   if epel_repos.epel_testing %}
-enabled=1
-{%   else %}
-enabled=0
-{%   endif %}
-{% else %}
-enabled=0
-{% endif %}
+enabled={{ '1' if epel_repos.epel_testing is defined and epel_repos.epel_testing else '0' }}
 gpgcheck=1
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-{{ epel_rel }}
 
@@ -20,15 +12,7 @@ name=Extra Packages for Enterprise Linux {{ epel_rel }} - Testing - $basearch - 
 #baseurl=http://download.fedoraproject.org/pub/epel/testing/{{ epel_rel }}/$basearch/debug
 mirrorlist=https://mirrors.fedoraproject.org/metalink?repo=testing-debug-epel{{ epel_rel }}&arch=$basearch
 failovermethod=priority
-{% if epel_repos.epel_testing_debuginfo is defined %}
-{%   if epel_repos.epel_testing_debuginfo %}
-enabled=1
-{%   else %}
-enabled=0
-{%   endif %}
-{% else %}
-enabled=0
-{% endif %}
+enabled={{ '1' if epel_repos.epel_testing_debuginfo is defined and epel_repos.epel_testing_debuginfo else '0' }}
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-{{ epel_rel }}
 gpgcheck=1
 
@@ -37,14 +21,6 @@ name=Extra Packages for Enterprise Linux {{ epel_rel }} - Testing - $basearch - 
 #baseurl=http://download.fedoraproject.org/pub/epel/testing/{{ epel_rel }}/SRPMS
 mirrorlist=https://mirrors.fedoraproject.org/metalink?repo=testing-source-epel{{ epel_rel }}&arch=$basearch
 failovermethod=priority
-{% if epel_repos.epel_testing_source is defined %}
-{%   if epel_repos.epel_testing_source %}
-enabled=1
-{%   else %}
-enabled=0
-{%   endif %}
-{% else %}
-enabled=0
-{% endif %}
+enabled={{ '1' if epel_repos.epel_testing_source is defined and epel_repos.epel_testing_source else '0' }}
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-{{ epel_rel }}
 gpgcheck=1
