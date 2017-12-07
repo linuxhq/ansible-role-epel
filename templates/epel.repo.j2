@@ -1,7 +1,7 @@
 [epel]
 name=Extra Packages for Enterprise Linux {{ epel_rel }} - $basearch
 #baseurl=http://download.fedoraproject.org/pub/epel/{{ epel_rel }}/$basearch
-mirrorlist=https://mirrors.fedoraproject.org/metalink?repo=epel-{{ epel_rel }}&arch=$basearch
+metalink=https://mirrors.fedoraproject.org/metalink?repo=epel-{{ epel_rel }}&arch=$basearch
 failovermethod=priority
 enabled={{ '1' if epel_repos.epel is defined and epel_repos.epel else '0' }}
 gpgcheck=1
@@ -10,7 +10,7 @@ gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-{{ epel_rel }}
 [epel-debuginfo]
 name=Extra Packages for Enterprise Linux {{ epel_rel }} - $basearch - Debug
 #baseurl=http://download.fedoraproject.org/pub/epel/{{ epel_rel }}/$basearch/debug
-mirrorlist=https://mirrors.fedoraproject.org/metalink?repo=epel-debug-{{ epel_rel }}&arch=$basearch
+metalink=https://mirrors.fedoraproject.org/metalink?repo=epel-debug-{{ epel_rel }}&arch=$basearch
 failovermethod=priority
 enabled={{ '1' if epel_repos.epel_debuginfo is defined and epel_repos.epel_debuginfo else '0' }}
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-{{ epel_rel }}
@@ -19,7 +19,7 @@ gpgcheck=1
 [epel-source]
 name=Extra Packages for Enterprise Linux {{ epel_rel }} - $basearch - Source
 #baseurl=http://download.fedoraproject.org/pub/epel/{{ epel_rel }}/SRPMS
-mirrorlist=https://mirrors.fedoraproject.org/metalink?repo=epel-source-{{ epel_rel }}&arch=$basearch
+metalink=https://mirrors.fedoraproject.org/metalink?repo=epel-source-{{ epel_rel }}&arch=$basearch
 failovermethod=priority
 enabled={{ '1' if epel_repos.epel_source is defined and epel_repos.epel_source else '0' }}
 gpgkey=file:///etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-{{ epel_rel }}
