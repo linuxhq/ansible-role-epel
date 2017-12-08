@@ -8,13 +8,6 @@
       - epel_rel is defined
       - epel_baseurl is defined
 
-- name: Acquiring the EPEL GPG Key
-  tags: epel
-  become: true
-  rpm_key:
-    key: "https://dl.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-{{ epel_rel }}"
-    state: present
-
 - name: Generating temporary filename via mktemp
   tags: epel
   command: mktemp -u --suffix .rpm
@@ -51,6 +44,13 @@
     - { src: epel.repo.j2, dst: /etc/yum.repos.d/epel.repo }
     - { src: epel-testing.repo.j2, dst: /etc/yum.repos.d/epel-testing.repo }
   when: epel_yum|success
+
+- name: Ensure that the EPEL GPG keys are installed
+  tags: epel
+  become: true
+  rpm_key:
+    key: "/etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-{{ epel_rel }}"
+    state: present
 
 - name: Purging temporary package from filesystem
   tags: epel
