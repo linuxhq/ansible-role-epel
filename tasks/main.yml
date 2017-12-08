@@ -9,6 +9,7 @@
       - epel_baseurl is defined
 
 - name: Acquiring the EPEL GPG Key
+  tags: epel
   become: true
   rpm_key:
     key: "https://dl.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-{{ epel_rel }}"
