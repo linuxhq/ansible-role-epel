@@ -1,5 +1,5 @@
 ---
-- name: Assert that prerequisites exist
+- name: Assert that the prerequisites are defined
   tags: epel
   assert:
     that:
@@ -8,12 +8,18 @@
       - epel_rel is defined
       - epel_baseurl is defined
 
-- name: Generate temporary destination via mktemp
+- name: Acquiring the EPEL GPG Key
+  become: true
+  rpm_key:
+    key: "https://dl.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-{{ epel_rel }}"
+    state: present
+
+- name: Generating temporary filename via mktemp
   tags: epel
   command: mktemp -u --suffix .rpm
   register: epel_mktemp
 
-- name: Download package to temporary destination
+- name: Downloading package to temporary location
   tags: epel
   get_url:
     url: "{{ epel_fetch }}"
@@ -21,8 +27,9 @@
   register: epel_get_url
   when: epel_mktemp|success
 
-- name: Ensure epel-release package is installed
+- name: Ensure that the epel-release package is installed
   tags: epel
+  become: true
   yum:
     name: "{{ item }}"
     state: present
@@ -30,8 +37,9 @@
   with_items: "{{ epel_mktemp.stdout }}"
   when: epel_get_url|success
 
-- name: Configure epel.repo and epel-testing.repo
+- name: Applying epel.repo and epel-testing.repo configurations
   tags: epel
+  become: true
   template:
     src: "{{ item.src }}"
     dest: "{{ item.dst }}"
@@ -43,7 +51,7 @@
     - { src: epel-testing.repo.j2, dst: /etc/yum.repos.d/epel-testing.repo }
   when: epel_yum|success
 
-- name: Erase temporary package
+- name: Purging temporary package from filesystem
   tags: epel
   file:
     path: "{{ epel_mktemp.stdout }}"
