@@ -23,6 +23,15 @@
   with_items: "{{ epel_mktemp.stdout }}"
   when: epel_get_url|success
 
+- name: Purging temporary package from filesystem
+  tags: epel
+  file:
+    path: "{{ epel_mktemp.stdout }}"
+    state: absent
+  when:
+    - epel_mktemp|success
+    - epel_yum|success
+
 - name: Applying epel.repo and epel-testing.repo configurations
   tags: epel
   become: true
@@ -56,14 +65,5 @@
   with_items: "{{ epel_packages }}"
   when:
     - epel_packages|length > 0
-    - epel_yum|success
-
-- name: Purging temporary package from filesystem
-  tags: epel
-  file:
-    path: "{{ epel_mktemp.stdout }}"
-    state: absent
-  when:
-    - epel_mktemp|success
     - epel_yum|success
 ...
