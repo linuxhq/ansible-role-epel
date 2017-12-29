@@ -12,20 +12,16 @@ None
 
 Available variables are listed below, along with default values:
 
-    epel_pkg: epel-release
-    epel_ver: latest
-    epel_rel: "{{ ansible_distribution_major_version }}"
-    epel_arch: noarch
-    epel_baseurl: "https://dl.fedoraproject.org/pub/epel"
-    epel_release: "{{ epel_pkg }}-{{ epel_ver }}-{{ epel_rel }}"
-    epel_fetch: "{{ epel_baseurl }}/{{ epel_release }}.{{ epel_arch }}.rpm"
-    epel_repos:
-      epel: False
-      epel_debuginfo: False
-      epel_source: False
-      epel_testing: False
-      epel_testing_debuginfo: False
-      epel_testing_source: False
+    epel_dist: "{{ ansible_distribution_major_version }}"
+    epel_disablerepo: []
+    epel_enablerepo: []
+    epel_packages: []
+    epel_repository_epel: false
+    epel_repository_epel_debuginfo: false
+    epel_repository_epel_source: false
+    epel_repository_testing: false
+    epel_repository_testing_debuginfo: false
+    epel_repository_testing_source: false
 
 All repositories are disabled by default.
 
@@ -38,8 +34,9 @@ None
     - hosts: servers
       roles:
         - role: linuxhq.epel
-          epel_repos:
-            epel: True
+          epel_packages:
+            - nload
+          epel_repository_epel: true
 
 ## License
 

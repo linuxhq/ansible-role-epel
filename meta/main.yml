@@ -1,4 +1,5 @@
 ---
+allow_duplicates: true
 dependencies: []
 galaxy_info:
   author: tkimball83
@@ -7,8 +8,7 @@ galaxy_info:
   min_ansible_version: 2.4
   platforms:
     - name: EL
-      versions: 
-        - 5
+      versions:
         - 6
         - 7
   galaxy_tags:

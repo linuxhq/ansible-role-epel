@@ -1,23 +1,15 @@
 ---
-- name: Assert that the prerequisites are defined
-  tags: epel
-  assert:
-    that:
-      - epel_pkg is defined
-      - epel_ver is defined
-      - epel_rel is defined
-      - epel_baseurl is defined
-
 - name: Generating temporary filename via mktemp
   tags: epel
-  command: mktemp -u --suffix .rpm
+  command: |
+    mktemp -u --suffix .rpm
   register: epel_mktemp
 
 - name: Downloading package to temporary location
   tags: epel
   get_url:
-    url: "{{ epel_fetch }}"
     dest: "{{ epel_mktemp.stdout }}"
+    url: "https://dl.fedoraproject.org/pub/epel/epel-release-latest-{{ epel_dist }}.noarch.rpm"
   register: epel_get_url
   when: epel_mktemp|success
 
@@ -51,6 +43,18 @@
   rpm_key:
     key: "/etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-{{ epel_rel }}"
     state: present
+  when: epel_yum|success
+
+- name: Ensure that the required epel packages are installed
+  tags: epel
+  become: true
+  yum:
+    disablerepo: "{{ epel_disablerepo|join(',') }}"
+    enablerepo: "{{ epel_enablerepo|join(',') }}"
+    name: "{{ item }}"
+    state: present
+  with_items: "{{ epel_packages }}"
+  when: epel_packages|length > 0
 
 - name: Purging temporary package from filesystem
   tags: epel
