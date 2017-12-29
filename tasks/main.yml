@@ -41,7 +41,7 @@
   tags: epel
   become: true
   rpm_key:
-    key: "/etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-{{ epel_rel }}"
+    key: "/etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-{{ epel_dist }}"
     state: present
   when: epel_yum|success
 
