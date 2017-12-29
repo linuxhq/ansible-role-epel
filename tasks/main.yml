@@ -54,7 +54,9 @@
     name: "{{ item }}"
     state: present
   with_items: "{{ epel_packages }}"
-  when: epel_packages|length > 0
+  when:
+    - epel_packages|length > 0
+    - epel_yum|success
 
 - name: Purging temporary package from filesystem
   tags: epel
