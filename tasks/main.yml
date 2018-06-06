@@ -1,17 +1,20 @@
 ---
-- name: Generating temporary filename via mktemp
+- name: Attempting to generate temporary file
   tags: epel
-  command: |
-    mktemp -u --suffix .rpm
-  register: epel_mktemp
+  tempfile:
+    prefix: epel.
+    state: file
+    suffix: .rpm
+  register: epel_tempfile
 
-- name: Downloading package to temporary location
+- name: Attempting to download package to temporary location
   tags: epel
   get_url:
-    dest: "{{ epel_mktemp.stdout }}"
+    dest: "{{ epel_tempfile.path }}"
+    force: yes
     url: "https://dl.fedoraproject.org/pub/epel/epel-release-latest-{{ epel_dist }}.noarch.rpm"
   register: epel_get_url
-  when: epel_mktemp|success
+  when: epel_tempfile is success
 
 - name: Ensure that the epel-release package is installed
   tags: epel
@@ -20,19 +23,19 @@
     name: "{{ item }}"
     state: present
   register: epel_yum
-  with_items: "{{ epel_mktemp.stdout }}"
-  when: epel_get_url|success
+  with_items: "{{ epel_tempfile.path }}"
+  when: epel_get_url is success
 
-- name: Purging temporary package from filesystem
+- name: Attempting to purge temporary package from the filesystem
   tags: epel
   file:
-    path: "{{ epel_mktemp.stdout }}"
+    path: "{{ epel_tempfile.path }}"
     state: absent
   when:
-    - epel_mktemp|success
-    - epel_yum|success
+    - epel_tempfile is success
+    - epel_yum is success
 
-- name: Applying epel.repo and epel-testing.repo configurations
+- name: Attempting to overlay epel repository configurations
   tags: epel
   become: true
   template:
@@ -44,15 +47,15 @@
   with_items:
     - { src: epel.repo.j2, dst: /etc/yum.repos.d/epel.repo }
     - { src: epel-testing.repo.j2, dst: /etc/yum.repos.d/epel-testing.repo }
-  when: epel_yum|success
+  when: epel_yum is success
 
-- name: Ensure that the EPEL GPG keys are installed
+- name: Ensure that the epel gpg keys are installed
   tags: epel
   become: true
   rpm_key:
     key: "/etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-{{ epel_dist }}"
     state: present
-  when: epel_yum|success
+  when: epel_yum is success
 
 - name: Ensure that the required epel packages are installed
   tags: epel
@@ -65,5 +68,5 @@
   with_items: "{{ epel_packages }}"
   when:
     - epel_packages|length > 0
-    - epel_yum|success
+    - epel_yum is success
 ...

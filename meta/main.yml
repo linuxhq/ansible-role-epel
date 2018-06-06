@@ -1,11 +1,10 @@
 ---
-allow_duplicates: true
 dependencies: []
 galaxy_info:
   author: tkimball83
   description: RHEL/CentOS - Extra Packages for Enterprise Linux
   license: GPLv3
-  min_ansible_version: 2.4
+  min_ansible_version: 2.5
   platforms:
     - name: EL
       versions:
@@ -13,6 +12,5 @@ galaxy_info:
         - 7
   galaxy_tags:
     - epel
-    - packaging
-    - system
+    - yum
 ...
