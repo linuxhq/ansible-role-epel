@@ -20,10 +20,9 @@
   tags: epel
   become: true
   yum:
-    name: "{{ item }}"
+    name: "{{ epel_tempfile.path }}"
     state: present
   register: epel_yum
-  with_items: "{{ epel_tempfile.path }}"
   when: epel_get_url is success
 
 - name: Attempting to purge temporary package from the filesystem
@@ -44,7 +43,7 @@
     owner: root
     group: root
     mode: 0644
-  with_items:
+  loop:
     - { src: epel.repo.j2, dst: /etc/yum.repos.d/epel.repo }
     - { src: epel-testing.repo.j2, dst: /etc/yum.repos.d/epel-testing.repo }
   when: epel_yum is success
@@ -65,7 +64,7 @@
     enablerepo: "{{ epel_enablerepo|join(',') }}"
     name: "{{ item }}"
     state: present
-  with_items: "{{ epel_packages }}"
+  loop: "{{ epel_packages }}"
   when:
     - epel_packages|length > 0
     - epel_yum is success
